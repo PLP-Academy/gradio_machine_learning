@@ -1,0 +1,15 @@
+ipykernel
+joblib
+jupyterlab
+matplotlib
+notebook
+numpy
+pandas
+scikit-learn
+scipy
+threadpoolctl
+torch
+torchaudio
+torchvision
+gradio
+tensorflow
