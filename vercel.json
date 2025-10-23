@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "index.py",
-      "use": "@vercel/poetry",
+      "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "50mb",
         "includeFiles": ["mnist_cnn_improved_model.h5"]
