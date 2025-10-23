@@ -21,18 +21,24 @@ pip install poetry
 poetry install
 
 # Run the app
-python index.py
+python app.py
 ```
 
 **🌐 Access at:** `http://localhost:7860`
 
-### Vercel Deployment
+### Hugging Face Spaces Deployment
 
 ```bash
-# Deploy to production
-vercel --prod
+# Deploy to Hugging Face Spaces
+# 1. Create a new Space: https://huggingface.co/spaces
+# 2. Upload your files or connect your GitHub repository
+# 3. Set the app file to `app.py` and requirements file to `requirements.txt`
+# 4. Deploy automatically
 
-# Or push to GitHub and connect to Vercel for automatic deployments
+# For local testing with Hugging Face Spaces SDK
+pip install huggingface_hub
+huggingface-cli login
+huggingface-cli upload bonus/ . --repo-type=space --commit-message="Update MNIST classifier"
 ```
 
 ## 🛠 Technical Details
@@ -47,7 +53,7 @@ vercel --prod
 - **Test Accuracy:** 99.42%
 - **Model Size:** ~2.5MB (compressed)
 - **Inference Time:** <100ms per prediction
-- **Memory Usage:** Optimized for serverless deployment
+- **Memory Usage:** Optimized for cloud deployment
 
 ### Dependencies
 Dependencies are managed with Poetry in `pyproject.toml`.
@@ -55,19 +61,26 @@ Dependencies are managed with Poetry in `pyproject.toml`.
 [tool.poetry.dependencies]
 python = "^3.12"
 gradio = "*"
-tensorflow-cpu = "*"
+tensorflow = ">=2.0.0"
 numpy = "*"
 Pillow = "*"
+```
+
+### Model Optimization
+The app uses TensorFlow Lite with post-training quantization for deployment efficiency:
+- Automatic conversion from Keras `.h5` to optimized TFLite model
+- Float16 quantization reduces model size while maintaining accuracy
+- TFLite inference engine for lightweight cloud deployment
+- Fallback option to use Keras model (set `USE_TFLITE = False` in `app.py`)
 ```
 
 ## 📁 Project Structure
 
 ```
 📁 bonus/
-├── 📄 index.py                    # Main Gradio application
+├── 📄 app.py                      # Main Gradio application
 ├── 📄 mnist_cnn_improved_model.h5 # Trained CNN model
-├── 📄 requirements.txt            # Python dependencies
-├── 📄 vercel.json                 # Vercel deployment config
+└── requirements.txt (exported dependencies)
 └── 📄 README.md                   # This file
 ```
 
@@ -86,9 +99,17 @@ cd bonus
 vercel --prod
 ```
 
-**Expected URL:** `https://your-project-name.vercel.app`
+**Expected URL:** `https://your-username-your-space-name.hf.space`
 
 ### Alternative Platforms
+
+#### Hugging Face Spaces (Recommended)
+```bash
+# Via Hugging Face Hub CLI
+pip install huggingface_hub
+huggingface-cli login
+huggingface-cli upload bonus/ . --repo-type=space --commit-message="Deploy MNIST classifier"
+```
 
 #### Railway
 ```bash
@@ -104,16 +125,16 @@ railway deploy
 
 ## 🔧 Configuration
 
-### Environment Variables (Vercel)
+### Environment Variables (Hugging Face Spaces)
 ```bash
-PYTHON_VERSION=3.9
-PORT=7860
+# No special environment variables required
+# The app handles model loading automatically
 ```
 
 ### Model Loading
-The app automatically loads the pre-trained model:
-- **Local:** Loads from `mnist_cnn_improved_model.h5`
-- **Production:** Handles model loading in serverless environment
+The app automatically loads and optimizes the pre-trained model:
+- **Local:** Loads from `mnist_cnn_improved_model.h5` and converts to TFLite
+- **Production:** Uses the pre-converted TFLite model for optimal performance
 
 ## 🎯 Usage
 
@@ -141,7 +162,8 @@ The app automatically loads the pre-trained model:
 **Import Errors:**
 ```bash
 # Ensure all dependencies are installed
-pip install -r requirements.txt
+pip install poetry
+poetry install
 ```
 
 ## 📊 Performance
