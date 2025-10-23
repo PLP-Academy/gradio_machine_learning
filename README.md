@@ -17,7 +17,8 @@ A sleek, interactive web application for classifying handwritten digits using a 
 
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+pip install poetry
+poetry install
 
 # Run the app
 python index.py
@@ -49,11 +50,14 @@ vercel --prod
 - **Memory Usage:** Optimized for serverless deployment
 
 ### Dependencies
-```txt
-gradio==4.44.0      # Web interface
-tensorflow-cpu==2.13.0  # ML framework (CPU version for deployment)
-numpy==1.24.3       # Numerical computations
-Pillow==10.0.1      # Image processing
+Dependencies are managed with Poetry in `pyproject.toml`.
+```toml
+[tool.poetry.dependencies]
+python = "^3.12"
+gradio = "*"
+tensorflow-cpu = "*"
+numpy = "*"
+Pillow = "*"
 ```
 
 ## 📁 Project Structure

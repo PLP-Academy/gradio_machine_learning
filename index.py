@@ -1,5 +1,5 @@
-import gradio as gr  # type: ignore
-import tensorflow as tf  # type: ignore
+import gradio as gr
+import tensorflow as tf
 import numpy as np
 
 # =============================================================================
@@ -12,7 +12,7 @@ try:
     print("✅ MNIST CNN model loaded successfully!")
 except Exception as e:
     print(f"❌ Error loading model: {e}")
-    print("Please ensure 'mnist_cnn_model.h5' exists and is a valid Keras model.")
+    print("Please ensure 'mnist_cnn_improved_model.h5' exists and is a valid Keras model.")
     # Exit or handle the error appropriately if the model is crucial for the app
     exit()
 
@@ -64,8 +64,9 @@ def classify_digit(image):
     predictions = model.predict(image_reshaped)[0] # Get probabilities for the single image
 
     # Check if it's likely not a digit (max confidence < threshold)
+    MAX_CONFIDENCE_THRESHOLD = 0.1 # Define threshold as a constant
     max_conf = np.max(predictions)
-    if max_conf < 0.1:  # Threshold for low confidence
+    if max_conf < MAX_CONFIDENCE_THRESHOLD:  # Threshold for low confidence
         return {"Not a digit": 1.0}  # Return special output for non-digits
 
     # Format predictions for Gradio output
@@ -108,7 +109,11 @@ iface = gr.Interface(
 # =============================================================================
 # The 'launch()' method starts the web server for the Gradio app.
 # It will typically open in your default browser at a local URL (e.g., http://127.0.0.1:7860).
+
 if __name__ == "__main__":
-    print("\n🚀 Launching Gradio application...")
+    print("\n🚀 Launching Gradio application locally...")
     print("Please wait for the local URL to appear in your terminal.")
-    iface.launch(share=False) # Set share=True to get a public link (optional, for sharing)
+    iface.launch(share=True) # Set share=True to get a public link (optional, for sharing)
+
+# For Vercel serverless deployment, expose the FastAPI ASGI app
+app = iface.server_app
