@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "gradio-machine-learning"
+version = "0.1.0"
+description = "A Gradio/TensorFlow ML project"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+gradio = "*"
+tensorflow-cpu = "*"
+numpy = "*"
+Pillow = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
